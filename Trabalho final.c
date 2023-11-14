@@ -30,6 +30,8 @@ Nodo* nodoName(List**, char*);
 void isThereTheName(Nodo*);
 void toLowerName(char*);
 void toUpperName(char*);
+void quicksort(Nodo**, int, int);
+int compare(const void *, const void *);
 
 int main(){
 	
@@ -57,10 +59,75 @@ int main(){
 	       // Agora, 'linha' contém o nome lido do arquivo
 	       insertList(hashTable, line);
 	}
+	
+	// Iterar sobre cada lista na tabela hash e ordenar os nomes usando quicksort
+	int i;
+    	for (i = 0; i < TAM; i++) {
+       	Nodo* array[hashTable[i]->size];
+       	Nodo* nodo = hashTable[i]->head;
+       	int j = 0;
 
+       // Preencher o array com os ponteiros para os nodos na lista
+       	while (nodo != NULL) {
+            		array[j++] = nodo;
+            		nodo = nodo->next;
+        	}
+
+       // Ordenar o array usando quicksort
+       	quicksort(array, 0, hashTable[i]->size - 1);
+
+       // Reconstruir a lista ordenada
+        	int k;
+       	hashTable[i]->head = array[0];
+       	for (k = 0; k < hashTable[i]->size - 1; k++) {
+       		array[k]->next = array[k + 1];
+       		array[k + 1]->prev = array[k];
+        	}
+       	hashTable[i]->tail = array[hashTable[i]->size - 1];
+       	hashTable[i]->tail->next = NULL;
+    	}
+    	
+    	/*char nameToFind[20];
+    	
+    	do{
+    		fgets(nameToFind, sizeof(nameToFind), stdin);
+    		printf("%s", nameToFind);
+    		isThereTheName(nodoName(hashTable, nameToFind));
+	} while(strlen(nameToFind) > 0);*/
+
+	
 	isThereTheName(nodoName(hashTable, "Otavio"));
 	isThereTheName(nodoName(hashTable, "Lucas"));
 	printList(hashTable);
+}
+
+// Função de comparação para o quicksort
+int compare(const void *a, const void *b) {
+	Nodo *nodoA = *(Nodo **)a;
+    	Nodo *nodoB = *(Nodo **)b;
+    	return strcmp(nodoA->name, nodoB->name);
+}
+
+// Função de ordenação quicksort
+void quicksort(Nodo** array, int left, int right) {
+   	if (left < right) {
+        	int pivot = left;
+        	int i;
+	       for (i = left + 1; i <= right; i++) {
+		       if (compare(&array[i], &array[left]) < 0) {
+		              pivot++;
+		              Nodo* temp = array[pivot];
+		              array[pivot] = array[i];
+		              array[i] = temp;
+		       }
+	       }
+	       Nodo* temp = array[left];
+	       array[left] = array[pivot];
+	       array[pivot] = temp;
+	
+	       quicksort(array, left, pivot - 1);
+	       quicksort(array, pivot + 1, right);
+    	}
 }
 
 void InitializeHashTable(List** hashTable){
