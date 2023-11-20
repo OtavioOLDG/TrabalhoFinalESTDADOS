@@ -87,22 +87,49 @@ int main(){
        	hashTable[i]->tail->next = NULL;
     	}
     	
-    	/*char nameToFind[20];
+    	int choice;
     	
     	do{
-    		fflush(stdin);
-    		fgets(nameToFind, sizeof(nameToFind), stdin);
-    		if (nameToFind[strlen(nameToFind) - 1] == '\n') 
-        		nameToFind[strlen(nameToFind) - 1] = '\0';
-    		toLowerName(nameToFind);
-		toUpperName(nameToFind);
-    		isThereTheName(nodoName(hashTable, nameToFind));
-	} while(strlen(nameToFind) > 0);*/
+    		system("cls");
+    		printf("Insert:\n1 - To find a name;\n2 - To delete a name;\n3 - To print the lists;\n0 - Exit;\n");
+    		scanf("%d", &choice);
+    		char nameToFind[20];
+    		if(choice == 1){
+    			printf("Enter a name: ");
+	    		fflush(stdin);
+	    		fgets(nameToFind, sizeof(nameToFind), stdin);
+	    		fflush(stdin);
+	    		
+	    		if (nameToFind[strlen(nameToFind) - 1] == '\n') 
+	        		nameToFind[strlen(nameToFind) - 1] = '\0';
+	        		
+	    		toLowerName(nameToFind);
+			toUpperName(nameToFind);
+	    		isThereTheName(nodoName(hashTable, nameToFind));
+		} else if(choice == 2){
+			printf("Enter a name: ");
+	    		fflush(stdin);
+	    		fgets(nameToFind, sizeof(nameToFind), stdin);
+	    		fflush(stdin);
+	    		
+	    		if (nameToFind[strlen(nameToFind) - 1] == '\n') 
+	        		nameToFind[strlen(nameToFind) - 1] = '\0';
+	        		
+	    		toLowerName(nameToFind);
+			toUpperName(nameToFind);
+			errorTreatment(removeList(hashTable, nameToFind));
+		} else if(choice == 3){
+			printList(hashTable);
+		} else if(choice == 0){
+			printf("Bye;\n");
+		} else{
+			printf("Try again;\n");
+		}
+		fflush(stdin);
+		printf("Press 'enter' to continue...\n");
+		getchar(); 
+	} while(choice != 0);
 
-	
-	isThereTheName(nodoName(hashTable, "Otavio"));
-	isThereTheName(nodoName(hashTable, "Lucas"));
-	printList(hashTable);
 }
 
 // Função de comparação para o quicksort
@@ -186,6 +213,8 @@ void errorTreatment(int error){
 	}
 	else if(error == -2){
 		printf("\nList End\n");	
+	} else {
+		printf("Successfull;\n");
 	}
 }
 
@@ -276,6 +305,7 @@ Nodo* nodoName(List** hashTable, char* name){
 	int hash = hashFunction(name);
 	Nodo* nodo;
 	nodo = hashTable[hash]->head;
+
 	while(nodo != NULL){
 		if(strcmp(name, nodo->name) == 0)
 			return nodo;
@@ -285,7 +315,9 @@ Nodo* nodoName(List** hashTable, char* name){
 }
 
 void isThereTheName(Nodo* name){
-	int hashing = hashFunction(name->name);
+	int hashing;
+	if(name != NULL)
+		hashing = hashFunction(name->name);
 	
 	if(name == NULL)
 		printf("No name found;\n");
