@@ -90,8 +90,12 @@ int main(){
     	/*char nameToFind[20];
     	
     	do{
+    		fflush(stdin);
     		fgets(nameToFind, sizeof(nameToFind), stdin);
-    		printf("%s", nameToFind);
+    		if (nameToFind[strlen(nameToFind) - 1] == '\n') 
+        		nameToFind[strlen(nameToFind) - 1] = '\0';
+    		toLowerName(nameToFind);
+		toUpperName(nameToFind);
     		isThereTheName(nodoName(hashTable, nameToFind));
 	} while(strlen(nameToFind) > 0);*/
 
@@ -253,15 +257,18 @@ void printList(List** hashTable){
 		nodo = hashTable[i]->head;
 		if (nodo != NULL)
 			printf("Hashing %i: ", i+1);
-			
+		
+		int cont = 0;
 		while(nodo != NULL){
 			if(nodo->next != NULL){
 				printf("%s, ", nodo->name);
 			} else{
-				printf("%s;\n\n", nodo->name);
+				printf("%s;\n", nodo->name);
 			}
+			cont++;
 			nodo = nodo->next;
 		}
+		printf("Quantidade de Nomes: %i\n\n", cont);
 	}
 }
 
@@ -278,10 +285,12 @@ Nodo* nodoName(List** hashTable, char* name){
 }
 
 void isThereTheName(Nodo* name){
+	int hashing = hashFunction(name->name);
+	
 	if(name == NULL)
 		printf("No name found;\n");
 	else 
-		printf("Name found: %s;\n", name->name);
+		printf("Name found: %s, hashing %i;\n", name->name, (hashing + 1));
 }
 
 void toLowerName(char* name){
